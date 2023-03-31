@@ -3,12 +3,16 @@
     <title>
         MandelPlot
     </title>
-    <script src="complex.js"></script>
+    <link href = "style.css" rel = "stylesheet">
     <script src="plot.js"></script>
     <script src="script.js"></script>
 </head>
 <body>
-    <canvas id = 'canvas'>
-
-    </canvas>
+    <div id = "container">
+        <canvas id = "canvas"> </canvas>
+    </div>
+    <div id = "settings">
+        <img src = "assets/drag.png" id = "drag-image">
+        <input type="slider" min="1" max="100">
+    </div>
 </body>
