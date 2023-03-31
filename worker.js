@@ -100,10 +100,5 @@ self.addEventListener('message', (event) => {
     });
 
     self.postMessage([colors, event.data[2]]);
-
-
-
-    // TODO: IF THE POINT PASSES, MAKE IT BLACK
-    // OTHERWISE GO FROM DEEP BLUE TO BLACK
-    // OTHERWISE IF CLOSE GO FROM DEEP BLUE TO WHITE
+    self.close();
 })
