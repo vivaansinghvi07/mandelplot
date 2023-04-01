@@ -72,7 +72,7 @@ class MandelPlot {
         for (let i = 0; i < this.workers; i++) {
 
             // creates worker and rows on which it will perform work
-            let worker = new Worker('worker.js');
+            let worker = new Worker('color-finder-worker.js');
             let material = new Array();
 
             // adds the arrays to the materials
@@ -87,6 +87,7 @@ class MandelPlot {
 
                 // checks if displayable
                 if (this.displayCount == this.workers) {
+                    worker.terminate();
                     this.displayGraph(ctx);
                 }
             });
@@ -105,23 +106,87 @@ class MandelPlot {
             })
         }
 
-        console.log(this.colors2D);
-        console.log(this.rows);
+        // checks if resolution is high enough to need workers
+        if (this.counts.x > 1500) {
+            this.withWorkers();
+        } else {
+            this.withoutWorkers(ctx);
+        }
+         
+    }
 
+    /**
+     *  NOTE: THIS IS FOR GRAPHING WITHOUT WORKERS 
+     *  WEAK WITH HIGHER RESOLUTIONS
+     *  BETTER WITH LOWER RESOLUTIONS
+     */
+
+    withoutWorkers(ctx) {
         this.colors2D.forEach((row, y) => {
             row.forEach((color, x) => {
 
                 // calcualtes spot for rectangle
-                let newX = (x / this.counts.x) * this.screen.width;
-                let newY = (y / this.counts.y) * this.screen.height;
-
+                let newX = Math.floor((x / this.counts.x) * this.screen.width);
+                let newY = Math.floor((y / this.counts.y) * this.screen.height);
+                let width = Math.floor(this.pointWidth * 1.5);
+                
                 ctx.fillStyle = color;
-                ctx.fillRect(newX, newY, this.pointWidth*1.5, this.pointWidth*1.5);
+                ctx.fillRect(newX, newY, width, width);
 
             })
         })
-
     }
 
+    /**
+     * NOTE: THIS IS HERE IN CASE YOU WANT TO USE WEB WORKERS TO GENERATE.
+     * IT IS ABOUT THE SAME TO DO AS ABOVE, BUT THIS IS MORE CAPABLE OF HIGHER RESOLUTIONS.
+     * BITMAPS ARE HARD.
+     */
+    
+    // finds colors
+    withWorkers() {
+        for (let i = 0; i < this.workers; i++) {
 
+            // creates worker and rows on which it will perform work
+            let worker = new Worker('plotter-worker.js');
+            let material = new Array();
+
+            // adds the arrays to the materials
+            for (let rowCount = (i === 0) ? 0 : this.workerIndeces[i - 1]; rowCount < this.workerIndeces[i]; rowCount++) {
+                material.push(this.colors2D[rowCount]);
+            }
+
+            // sends and receievs message from the worker
+            worker.postMessage({
+                colors: material,
+                adder: (i === 0) ? 0 : this.workerIndeces[i - 1],
+                screen: this.screen,
+                width: this.pointWidth * 2,
+                counts: this.counts
+            });
+
+            worker.addEventListener("message", (event) => {
+                // loads canvas for drawing rects
+                let canvas = document.createElement("canvas");
+
+                // maximize size
+                canvas.width = this.screen.width;
+                canvas.height = this.screen.height;
+                canvas.style.position = "absolute";
+                canvas.style.top = `${Math.floor(this.screen.height / this.workers * event.data[1])}px;`;
+                canvas.style.left = "0";
+
+                // load to render image
+                let ctx = canvas.getContext('bitmaprenderer');
+
+                // settings
+                ctx.transferFromImageBitmap(event.data[0]);
+
+                // adds to doc
+                document.getElementById("container").appendChild(canvas);
+
+            });
+        }
+    }
 }
+
