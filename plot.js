@@ -2,6 +2,7 @@ class MandelPlot {
 
     // creates a new plot element with the
     constructor(screen, density, depth, bounds, workers) {
+
         // sets the bounds for the plot
         this.bounds = bounds;  
 
@@ -21,6 +22,9 @@ class MandelPlot {
 
         // counts to make sure the thing is ready to display
         this.displayCount = 0;
+        
+        // stores plot number
+        this.plotsDone = 0;
 
         // determines height density
         this.counts = {
@@ -107,8 +111,8 @@ class MandelPlot {
         }
 
         // checks if resolution is high enough to need workers
-        if (this.counts.x > 1500) {
-            this.withWorkers();
+        if (this.counts.x > 1000) {
+            this.withWorkers(ctx);
         } else {
             this.withoutWorkers(ctx);
         }
@@ -130,9 +134,12 @@ class MandelPlot {
                 let newY = Math.floor((y / this.counts.y) * this.screen.height);
                 let width = Math.floor(this.pointWidth * 1.5);
                 
+                // plots rectangle
                 ctx.fillStyle = color;
                 ctx.fillRect(newX, newY, width, width);
 
+                // allows for further geenration
+                document.getElementById("queue-manager").innerHTML = "continue";
             })
         })
     }
@@ -144,7 +151,8 @@ class MandelPlot {
      */
     
     // finds colors
-    withWorkers() {
+    withWorkers(ctx) {
+
         for (let i = 0; i < this.workers; i++) {
 
             // creates worker and rows on which it will perform work
@@ -159,31 +167,26 @@ class MandelPlot {
             // sends and receievs message from the worker
             worker.postMessage({
                 colors: material,
-                adder: (i === 0) ? 0 : this.workerIndeces[i - 1],
+                adder: i,
                 screen: this.screen,
                 width: this.pointWidth * 2,
                 counts: this.counts
             });
 
             worker.addEventListener("message", (event) => {
-                // loads canvas for drawing rects
-                let canvas = document.createElement("canvas");
 
                 // maximize size
-                canvas.width = this.screen.width;
-                canvas.height = this.screen.height;
-                canvas.style.position = "absolute";
-                canvas.style.top = `${Math.floor(this.screen.height / this.workers * event.data[1])}px;`;
-                canvas.style.left = "0";
+                let top = Math.floor(this.screen.height / this.workers * event.data[1]);
+                let left = 0;
 
-                // load to render image
-                let ctx = canvas.getContext('bitmaprenderer');
+                // draws image only if its the right plot
+                ctx.drawImage(event.data[0], left, top);
 
-                // settings
-                ctx.transferFromImageBitmap(event.data[0]);
-
-                // adds to doc
-                document.getElementById("container").appendChild(canvas);
+                // increases plots
+                this.plotsDone++;
+                if (this.plotsDone == this.workers) {
+                    document.getElementById("queue-manager").innerHTML = "continue";
+                }
 
             });
         }
