@@ -8,7 +8,7 @@ self.addEventListener("message", (event) => {
     let counts = event.data.counts;
 
     // obtains canvas and shows it
-    let canvas = new OffscreenCanvas(screen.width, screen.height);
+    let canvas = new OffscreenCanvas(screen.width, screen.height / 10);
     let ctx = canvas.getContext('2d');
 
     // settings
@@ -21,7 +21,7 @@ self.addEventListener("message", (event) => {
 
             // finds new bounds
             let newX = Math.floor((x / counts.x) * screen.width);
-            let newY = Math.floor(((y + adder) / counts.y) * screen.height);
+            let newY = Math.floor((y / counts.y) * screen.height);
 
             // filsl the rectangle
             ctx.fillStyle = color;
