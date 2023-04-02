@@ -76,7 +76,7 @@ class MandelPlot {
         for (let i = 0; i < this.workers; i++) {
 
             // creates worker and rows on which it will perform work
-            let worker = new Worker('color-finder-worker.js');
+            let worker = new Worker('src/worker/color-finder-worker.js');
             let material = new Array();
 
             // adds the arrays to the materials
@@ -156,7 +156,7 @@ class MandelPlot {
         for (let i = 0; i < this.workers; i++) {
 
             // creates worker and rows on which it will perform work
-            let worker = new Worker('plotter-worker.js');
+            let worker = new Worker('src/worker/plotter-worker.js');
             let material = new Array();
 
             // adds the arrays to the materials
