@@ -1,13 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap'); 
+
+:root {
+    --SETTINGSWIDTH: calc(100vw * 0.2); 
+    --SETTINGSHEIGHT: calc(var(--SETTINGSWIDTH) * 2);
+    --HEADERFONT: calc(var(--SETTINGSWIDTH) * 0.08);
+}
+
 html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    font-family: 'Nunito', sans-serif;
 }
 
-.container {
+canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+#settings {
+    position: absolute;
+    top: calc(var(--SETTINGSWIDTH) / 2);
+    left: calc(var(--SETTINGSWIDTH) / 2);
+    width: var(--SETTINGSWIDTH); 
+    height: var(--SETTINGSHEIGHT);
+    background-color: white;
+    border-radius: 10% / 5%;
+    filter: opacity(75%);
+}
+
+#drag-image {
+    position: absolute;
+    width: 10%;
+    height: auto;
+    top: 3%;
+    left: 85%;
+}
+
+header {
+    position: absolute;
+    text-align: center;
+    width: 50%;
+    top: 3%;
+    left: 25%;
+    font-size: var(--HEADERFONT);
+}
+
+.slider {
+    position: absolute;
+    width: 100%;
+    margin: 0px auto;
+    top: 35%;
+}
+
+.slider-info {
+    position: absolute;
+    font-size: calc(var(--HEADERFONT) * 0.7);
+    left: 0;
+    top: 0;
+}
+
+.setting {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    height: 15%;
+}
+
+.resolution-slider {
+    top: 15%;
+}
+
+.worker-slider {
+    top: 25%;
+}
+
+.zoom-slider {
+    top: 35%;
 }
