@@ -111,7 +111,7 @@ class MandelPlot {
         }
 
         // checks if resolution is high enough to need workers
-        if (this.counts.x > 1000) {
+        if (this.counts.x > 100) {
             this.withWorkers(ctx);
         } else {
             this.withoutWorkers(ctx);
@@ -160,7 +160,7 @@ class MandelPlot {
             let material = new Array();
 
             // adds the arrays to the materials
-            for (let rowCount = (i === 0) ? 0 : this.workerIndeces[i - 1]; rowCount < this.workerIndeces[i]; rowCount++) {
+            for (let rowCount = (i === 0) ? 0 : this.workerIndeces[i - 1]; rowCount <= Math.min(this.counts.y-1, this.workerIndeces[i]); rowCount++) {
                 material.push(this.colors2D[rowCount]);
             }
 
@@ -170,13 +170,14 @@ class MandelPlot {
                 adder: i,
                 screen: this.screen,
                 width: this.pointWidth * 2,
-                counts: this.counts
+                counts: this.counts,
+                workers: this.workers
             });
 
             worker.addEventListener("message", (event) => {
 
                 // maximize size
-                let top = Math.floor(this.screen.height / this.workers * event.data[1]);
+                let top = this.screen.height / this.workers * event.data[1];
                 let left = 0;
 
                 // draws image only if its the right plot
