@@ -6,9 +6,10 @@ self.addEventListener("message", (event) => {
     let adder = event.data.adder;
     let width = event.data.width;
     let counts = event.data.counts;
+    let workers = event.data.workers;
 
     // obtains canvas and shows it
-    let canvas = new OffscreenCanvas(screen.width, screen.height / 10);
+    let canvas = new OffscreenCanvas(screen.width, screen.height / workers);
     let ctx = canvas.getContext('2d');
 
     // settings
