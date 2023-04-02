@@ -18,6 +18,12 @@ self.addEventListener("message", (event) => {
 
     // fills colors
     colors.forEach((row, y) => {
+
+        // exits if undefined row
+        if (!row) {
+            return;
+        }
+
         row.forEach((color, x) => {
 
             // finds new bounds
