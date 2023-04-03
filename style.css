@@ -84,6 +84,20 @@ header {
     left: 23%;
 }
 
+.button {
+    position: absolute;
+}
+
+#reload { 
+    left: 30%;
+    width: 40%;
+    height: 30%;
+}
+
+.reload-button {
+    top: 90%;
+}
+
 .setting-info {
     position: absolute;
     font-size: calc(var(--HEADERFONT) * 0.7);
