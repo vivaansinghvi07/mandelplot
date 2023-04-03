@@ -31,7 +31,7 @@
         </div>
         
         <div class = "setting worker-slider">
-            <input type = "range" min = "1" max = "50" value = "16" class = "slider" id = "workers">
+            <input type = "range" min = "1" max = "32" value = "12" class = "slider" id = "workers">
             <div class = "setting-info">
                 Workers: <span id = "workers-value"></span>
             </div>
@@ -68,6 +68,28 @@
         <div class = "setting reload-button">
             <button class = "button" id = "reload">Apply Settings</button>
         </div>
+
+        <hr class = "settings-split">
+
+        <div class = "setting center-input">
+            <div class = "center-info">
+                Center: ( <span><input id = "x-center" class = "point-input" value = ""></span> , <input id = "y-center" class = "point-input" value = ""> )
+            </div>
+        </div>
+        <div class = "setting bounds-input">
+            <div class = "bounds-info">
+                Bounds: <br>
+                <div style = "text-align: center">
+                    <span><input id = "x-lower" class = "point-input" value = ""></span> &lt; x &lt; <span><input id = "x-upper" class = "point-input" value = ""></span>
+                    <span><input id = "y-lower" class = "point-input" value = ""></span> &lt; y &lt; <span><input id = "y-upper" class = "point-input" value = ""></span>
+                </div>
+            </div>
+        </div>
+
+        <div class = "setting custom-button">
+            <button class = "button" id = "custom">Apply Params</button>
+        </div>
+
     </div>
 </body>
 

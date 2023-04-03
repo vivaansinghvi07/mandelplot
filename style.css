@@ -71,9 +71,10 @@ header {
 
 .select {
     position: absolute;
-    top: 4%;
-    width: 50%;
-    height: 20%;
+    top: 0%;
+    width: 55%;
+    height: 25%;
+    font-size: calc(var(--HEADERFONT) * 0.6);
 }
 
 #animation {
@@ -86,16 +87,18 @@ header {
 
 .button {
     position: absolute;
+    font-size: calc(var(--HEADERFONT) * 0.50);
+    height: 30%;
 }
 
 #reload { 
     left: 30%;
     width: 40%;
-    height: 30%;
 }
 
-.reload-button {
-    top: 90%;
+#custom {
+    left: 30%;
+    width: 40%;
 }
 
 .setting-info {
@@ -105,11 +108,39 @@ header {
     top: 0;
 }
 
+.center-info {
+    position: absolute;
+    font-size: calc(var(--HEADERFONT) * 0.5);
+    top: 0;
+    left: 0;
+}
+
+.bounds-info {
+    position: absolute;
+    font-size: calc(var(--HEADERFONT) * 0.5);
+    line-height: 2em;
+    top: 0;
+    left: 0;
+}
+
 .setting {
     position: absolute;
     width: 80%;
     left: 10%;
     height: 15%;
+}
+
+.point-input {
+    width: 32%;
+    font-size: calc(var(--HEADERFONT) * 0.5);
+}
+
+#center-x {
+    left: 28%;
+}
+
+#center-y {
+    left: 65%;
 }
 
 .resolution-slider {
@@ -130,4 +161,26 @@ header {
 
 .color-select {
     top: 51%;
+}
+
+.reload-button {
+    top: 58%;
+}
+
+.settings-split {
+    position: absolute;
+    top: 65%;
+    width: 99.5%;
+}
+
+.center-input {
+    top: 70%;
+}
+
+.bounds-input {
+    top: 75%;
+}
+
+.custom-button {
+    top: 90%;
 }
