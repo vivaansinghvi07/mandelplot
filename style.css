@@ -62,7 +62,18 @@ header {
     top: 35%;
 }
 
-.slider-info {
+.checkbox {
+    position: absolute;
+    top: 0%;
+    width: 20%;
+    height: 20%;
+}
+
+#animation {
+    left: 30%;
+}
+
+.setting-info {
     position: absolute;
     font-size: calc(var(--HEADERFONT) * 0.7);
     left: 0;
@@ -86,4 +97,8 @@ header {
 
 .zoom-slider {
     top: 35%;
+}
+
+.animation-check {
+    top: 45%;
 }
