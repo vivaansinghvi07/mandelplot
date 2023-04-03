@@ -119,10 +119,10 @@ class MandelPlot {
         }
 
         // checks if resolution is high enough to need workers
-        if (this.counts.x > 100) {
-            this.withWorkers(ctx);
-        } else {
+        if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1) {    // checks if browser is safari
             this.withoutWorkers(ctx);
+        } else {
+            this.withWorkers(ctx);
         }
          
     }
