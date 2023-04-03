@@ -4,15 +4,54 @@
         MandelPlot
     </title>
     <link href = "style.css" rel = "stylesheet">
-    <script src="plot.js"></script>
-    <script src="script.js"></script>
+    <script src="lib/anime.js"></script>
+    <script src="lib/settings.js"></script>
+    <script src="src/plot.js"></script>
+    <script src="src/script.js"></script>
 </head>
 <body>
+
+    <!-- This stores that number the canvas is on -->
+    <div id = "queue-manager" hidden="hidden"></div>
+
     <div id = "container">
+        <canvas id = "zoomed-canvas"> </canvas>
         <canvas id = "canvas"> </canvas>
     </div>
     <div id = "settings">
+
         <img src = "assets/drag.png" id = "drag-image">
-        <input type="slider" min="1" max="100">
+        <header>Mandel-Plot</header>
+
+        <div class = "setting resolution-slider">
+            <input type="range" min="100" max="3000" value="1200" class = "slider" id="resolution">
+            <div class = "setting-info">
+                Resolution: <span id = "resolution-value"></span>
+            </div>
+        </div>
+        
+        <div class = "setting worker-slider">
+            <input type = "range" min = "1" max = "50" value = "16" class = "slider" id = "workers">
+            <div class = "setting-info">
+                Workers: <span id = "workers-value"></span>
+            </div>
+        </div>
+
+        <div class = "setting zoom-slider">
+            <input type = "range" min = "5" max = "95" value = "80" class = "slider" id = "zoom">
+            <div class = "setting-info">
+                Zoom: <span id = "zoom-value"></span>%
+            </div>
+        </div>
+
+        <div class = "setting animation-check">
+            <input type = "checkbox" id = "animation" class = "checkbox" checked="true">
+            <div class = "setting-info">
+                Animation: <span id = "animation-value"></span>
+            </div>
+        </div>
+
+
     </div>
 </body>
+

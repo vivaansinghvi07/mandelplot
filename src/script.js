@@ -113,6 +113,11 @@ function getZoom() {
     return parseInt(document.getElementById("zoom").value) / 100;
 }
 
+// returns if its animated
+function animated() {
+    return document.getElementById("animation").checked;
+}
+
 // zooms the canvas by the zoom factor into the values given
 function zoomCanvas(x, y, zoom) {
     // gets new canvas
@@ -145,12 +150,13 @@ function zoomCanvas(x, y, zoom) {
     newCanvas.style.left = "0";
     newCanvas.style.top = "0";
  
+    // performs animation
     anime({
         targets: newCanvas,
         left: `${-dx}px`,
         top: `${-dy}px` ,
         scale: `${scale}`,
         easing: 'linear',
-        duration: 1000
+        duration: animated() ? 1000 : 0     // sets animation if necessary
     });
 }
