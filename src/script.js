@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bounds.upperY = bounds.upperY - (bounds.upperY - centerY) * zoom;
 
         // increases depth - https://math.stackexchange.com/a/2589243
-        depth = 50 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4.7);
+        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
 
         // resizes width and height
         resizeCanvas(canvas);
@@ -97,12 +97,12 @@ function plot(resolution, depth, bounds, workers, ctx, color) {
 
 // returns width of screen
 function width() {
-    return document.documentElement.clientWidth;
+    return window.innerWidth;
 }
 
 // returns height of screen
 function height() {
-    return document.documentElement.clientHeight;
+    return window.innerHeight;
 }
 
 // returns resolution according to settings
@@ -137,7 +137,8 @@ function resizeCanvas(canvas) {
 }
 
 // zooms the canvas by the zoom factor into the values given
-function zoomCanvas(x, y, zoom) {
+async function zoomCanvas(x, y, zoom) {
+
     // gets new canvas
     let newCanvas = document.getElementById("zoomed-canvas");
     let newCtx = newCanvas.getContext('2d');
@@ -149,12 +150,15 @@ function zoomCanvas(x, y, zoom) {
     // sets width and height
     newCanvas.width = width();
     newCanvas.height = height();
+    
+    // copies old to new canvas
+    await new Promise((resolve, reject) => {
+        newCtx.drawImage(oldCanvas, 0, 0);
 
-    // copies canvas
-    newCtx.drawImage(oldCanvas, 0, 0);
-
-    // clear old canvas
-    oldCtx.clearRect(0, 0, width(), height());
+        // clear old canvas
+        oldCtx.clearRect(0, 0, width(), height());
+        resolve();
+    });
 
     // gets scale factor
     let scale = 1 / (1 - zoom);
@@ -169,12 +173,15 @@ function zoomCanvas(x, y, zoom) {
     newCanvas.style.top = "0";
  
     // performs animation
-    anime({
-        targets: newCanvas,
-        left: `${-dx}px`,
-        top: `${-dy}px` ,
-        scale: `${scale}`,
-        easing: 'linear',
-        duration: animated() ? 1000 : 0     // sets animation if necessary
-    });
+    setTimeout(() => {
+        anime({
+            targets: newCanvas,
+            left: `${-dx}px`,
+            top: `${-dy}px` ,
+            scale: `${scale}`,
+            easing: 'linear',
+            duration: animated() ? 1000 : 0     // sets animation if necessary
+        });
+    }, Math.max(0, getResolution() - 2000));
+
 }
