@@ -1,7 +1,7 @@
 class MandelPlot {
 
     // creates a new plot element with the
-    constructor(screen, density, depth, bounds, workers) {
+    constructor(screen, density, depth, bounds, workers, color) {
 
         // sets the bounds for the plot
         this.bounds = bounds;  
@@ -25,6 +25,9 @@ class MandelPlot {
         
         // stores plot number
         this.plotsDone = 0;
+
+        // stores color
+        this.color = color;
 
         // determines height density
         this.counts = {
@@ -98,7 +101,8 @@ class MandelPlot {
             worker.postMessage({
                 points: material, 
                 depth: this.depth, 
-                id: i
+                id: i,
+                scheme: this.color
             });
         }
         

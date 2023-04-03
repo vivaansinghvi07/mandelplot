@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.height = height();
 
     // display the plot
-    plot(getResolution(), depth, bounds, getWorkers(), ctx);
+    plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
 
     // listens for click
     document.getElementById("container").addEventListener("click", function(event) {
@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (document.getElementById("queue-manager").innerHTML === "stop") {
             return;
         }
+
+        // pauses making of other graphs
+        document.getElementById("queue-manager").innerHTML = "stop";
 
         // gets zoom scale
         let zoom = getZoom();
@@ -51,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = height();
 
         // plots
-        plot(getResolution(), depth, bounds, getWorkers(), ctx);
+        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
 
     });
 
@@ -71,10 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 });
 
-function plot(resolution, depth, bounds, workers, ctx) {
-
-    // pauses making of other graphs
-    document.getElementById("queue-manager").innerHTML = "stop";
+function plot(resolution, depth, bounds, workers, ctx, color) {
 
     let plt = new MandelPlot({
         width: width(),
@@ -84,7 +84,7 @@ function plot(resolution, depth, bounds, workers, ctx) {
         upperX: bounds.upperX,
         lowerY: bounds.lowerY,
         upperY: bounds.upperY
-    }, workers);
+    }, workers, color);
     plt.display(ctx);
 }
 
@@ -116,6 +116,11 @@ function getZoom() {
 // returns if its animated
 function animated() {
     return document.getElementById("animation").checked;
+}
+
+// retursn color
+function getColor() {
+    return document.getElementById("color").value;
 }
 
 // zooms the canvas by the zoom factor into the values given

@@ -51,31 +51,42 @@ self.addEventListener('message', (event) => {
     }
 
     // function for mapping thing to color
-    function mapToColor(depthReached, depth) {
-        let quotient = depthReached / depth;
+    function mapToColor(depthReached, depth, scheme) {
 
-        // checks if its in the set
-        if (quotient < 0) {
-            return "rgb(0, 0, 0)"
-        }
+        function rgbColor (depthReached, depth, color) {
+            let quotient = depthReached / depth;
 
-        // if its closer, go from blue to white
-        else if (quotient > 0.5) {
-            let value = Math.floor(256 - 2 * (1 - quotient) * 256);
-            return `rgb(${value}, ${value}, 256)`;
+            // checks if its in the set
+            if (quotient < 0) {
+                return "rgb(0, 0, 0)"
+            }
+
+            // if its closer, go from blue to white
+            else if (quotient > 0.5) {
+                let value = Math.floor(256 - 2 * (1 - quotient) * 256);
+                return `rgb(${color !== "red" ? value: 256}, ${color !== "green" ? value: 256}, ${color !== "blue" ? value: 256})`;
+            }
+            
+            // if its farther, go from black to blue
+            else {
+                let value = Math.floor(256 * (quotient * 2));
+                return `rgb(${color === "red" ? value: 0}, ${color === "green" ? value: 0}, ${color === "blue" ? value: 0})`
+            }
         }
         
-        // if its farther, go from black to blue
-        else {
-            let value = Math.floor(256 * (quotient * 2));
-            return `rgb(0, 0, ${value})`
+        // checks if the "rgb" color method is used
+        if (scheme === "blue" || scheme === "red" || scheme === "green") {
+            return rgbColor (depthReached, depth, scheme);
         }
         
     }
 
-    // creates the colors and points
+    // loads settings
     let points = event.data.points;
     let depth = event.data.depth;
+    let scheme = event.data.scheme;
+
+    // new array for colors
     let colors = new Array();
 
     // goes through every point and calculates the color
@@ -89,7 +100,7 @@ self.addEventListener('message', (event) => {
             let depthReached = test(new Complex(element.x, element.y), depth);
 
             // gets color
-            let color = mapToColor(depthReached, depth);
+            let color = mapToColor(depthReached, depth, scheme);
 
             // adds colors to array
             colorRow.push(color);
