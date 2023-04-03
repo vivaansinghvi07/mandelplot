@@ -74,8 +74,8 @@ self.addEventListener('message', (event) => {
     }
 
     // creates the colors and points
-    let points = event.data[0];
-    let depth = event.data[1];
+    let points = event.data.points;
+    let depth = event.data.depth;
     let colors = new Array();
 
     // goes through every point and calculates the color
@@ -99,6 +99,9 @@ self.addEventListener('message', (event) => {
         colors.push(colorRow);
     });
 
-    self.postMessage([colors, event.data[2]]);
+    self.postMessage({
+        colors: colors,
+        id: event.data.id
+    });
     self.close();
 })

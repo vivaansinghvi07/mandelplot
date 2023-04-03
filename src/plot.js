@@ -86,7 +86,7 @@ class MandelPlot {
 
             // sends and receievs message from the worker
             worker.addEventListener('message', (event) => {
-                this.colors[event.data[1]] = event.data[0];
+                this.colors[event.data.id] = event.data.colors;
                 this.displayCount++;
 
                 // checks if displayable
@@ -95,7 +95,11 @@ class MandelPlot {
                     this.displayGraph(ctx);
                 }
             });
-            worker.postMessage([material, this.depth, i]);
+            worker.postMessage({
+                points: material, 
+                depth: this.depth, 
+                id: i
+            });
         }
         
     }
