@@ -13,8 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // gets canvas
     let canvas = document.getElementById("canvas");
     let ctx = canvas.getContext("2d");
-    canvas.width = width();
-    canvas.height = height();
+    resizeCanvas(canvas);
 
     // display the plot
     plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
@@ -50,8 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         depth = 50 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4.7);
 
         // resizes width and height
-        canvas.width = width();
-        canvas.height = height();
+        resizeCanvas(canvas);
 
         // plots
         plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
@@ -71,11 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
         slider.oninput = function() {
             document.getElementById(slider.id + "-value").innerHTML = slider.value;
         }
-    })
+    });
+
+    // detects apply new settings button click
+    document.getElementById("reload").addEventListener("click", () => {
+        // plots with updated settings
+        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+    });
 });
 
 function plot(resolution, depth, bounds, workers, ctx, color) {
 
+    // creates new plot with defined settings
     let plt = new MandelPlot({
         width: width(),
         height: height()
@@ -85,6 +90,8 @@ function plot(resolution, depth, bounds, workers, ctx, color) {
         lowerY: bounds.lowerY,
         upperY: bounds.upperY
     }, workers, color);
+
+    // displays plot
     plt.display(ctx);
 }
 
@@ -121,6 +128,12 @@ function animated() {
 // retursn color
 function getColor() {
     return document.getElementById("color").value;
+}
+
+// resizes canvas 
+function resizeCanvas(canvas) {
+    canvas.width = width();
+    canvas.height = height();
 }
 
 // zooms the canvas by the zoom factor into the values given
