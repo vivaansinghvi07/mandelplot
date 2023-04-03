@@ -88,12 +88,35 @@ self.addEventListener('message', (event) => {
             let value = color === "blackwhite" ? Math.floor(255 * quotient) : Math.floor(255 * (1 - quotient));
             return `rgb(${value}, ${value}, ${value})`;
         }
+
+        // cycles through colors for rainbow
+        function rainbow(depthReached) {
+
+            // checks for max depth reached
+            if (depthReached === -1) {
+                return 'rgb(0, 0, 0)';
+            }
+
+            // returns corresponding rainbow value
+            return [
+                "rgb(255, 0, 0)",
+                "rgb(255, 165, 0)",
+                "rgb(255, 255, 0)",
+                "rgb(0, 128, 0)",
+                "rgb(0, 0, 255)",
+                "rgb(75, 0, 130)",
+                "rgb(238, 130, 238)"
+            ][depthReached % 7];
+
+        }
         
         // checks if the "rgb" color method is used
         if (scheme === "blue" || scheme === "red" || scheme === "green") {
             return rgbColor(depthReached, depth, scheme);
         } else if (scheme === "inverted" || scheme === "blackwhite") {
             return blackWhite(depthReached, depth, scheme);
+        } else if (scheme === "rainbow") {
+            return rainbow(depthReached);
         }
         
     }
