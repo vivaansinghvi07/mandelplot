@@ -69,8 +69,19 @@ header {
     height: 20%;
 }
 
+.select {
+    position: absolute;
+    top: 4%;
+    width: 50%;
+    height: 20%;
+}
+
 #animation {
     left: 30%;
+}
+
+#color {
+    left: 25%;
 }
 
 .setting-info {
@@ -101,4 +112,8 @@ header {
 
 .animation-check {
     top: 45%;
+}
+
+.color-select {
+    top: 51%;
 }
