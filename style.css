@@ -135,14 +135,6 @@ header {
     font-size: calc(var(--HEADERFONT) * 0.5);
 }
 
-#center-x {
-    left: 28%;
-}
-
-#center-y {
-    left: 65%;
-}
-
 .resolution-slider {
     top: 15%;
 }
@@ -192,4 +184,12 @@ header {
     text-align: center;
     top: 96%;
     width: 100%;
+}
+
+#center-x {
+    color: blue;
+}
+
+#center-y {
+    color: blue;
 }
