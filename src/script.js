@@ -1,6 +1,13 @@
 // waits for content being loaded
 document.addEventListener("DOMContentLoaded", () => {
 
+    // sets settings style based on if its on safari
+    if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1) {
+        document.getElementById("animation").style.left = "36%";
+        document.getElementById("color").style.top = "5%";
+    }
+
+
     // starting values
     let bounds = {
         lowerX: -2.4,
@@ -19,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
 
     // listens for click
-    document.getElementById("container").addEventListener("click", function(event) {
+    document.getElementById("container").addEventListener("click", async function(event) {
 
         // checks if there is another graph in queue
         if (document.getElementById("queue-manager").innerHTML === "stop") {
@@ -33,7 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
         let zoom = getZoom();
 
         // performs visual zoom
-        zoomCanvas(event.x, event.y, zoom);
+        await new Promise((resolve, reject) => {
+            zoomCanvas(event.x, event.y, zoom);
+            setTimeout(() => {
+                resolve();
+            }, Math.max(0, animated() ? 1500 - getResolution() : 0));
+        })
 
         // determines what fraction of the width/height was clicked and resizes according to bounds
         let centerX = bounds.lowerX + (bounds.upperX - bounds.lowerX) * (event.x / width());   
@@ -183,5 +195,4 @@ async function zoomCanvas(x, y, zoom) {
             duration: animated() ? 1000 : 0     // sets animation if necessary
         });
     }, Math.max(0, getResolution() - 2000));
-
 }
