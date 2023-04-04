@@ -185,7 +185,7 @@ header {
     top: 90%;
 }
 
-.error-message {
+#error-message {
     position: absolute;
     font-size: calc(var(--HEADERFONT) * 0.4);
     color: red;
