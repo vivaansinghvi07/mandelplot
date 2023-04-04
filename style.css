@@ -46,6 +46,14 @@ canvas {
     left: 85%;
 }
 
+#help-image {
+    position: absolute;
+    width: 10%;
+    height: auto;
+    top: 3%;
+    left: 7%;
+}
+
 header {
     position: absolute;
     text-align: center;
@@ -159,10 +167,17 @@ header {
     top: 58%;
 }
 
-.settings-split {
+hr {
     position: absolute;
-    top: 65%;
     width: 99.5%;
+}
+
+.settings-split {
+    top: 65%;
+}
+
+.title-split {
+    top: 10%;
 }
 
 .center-input {
