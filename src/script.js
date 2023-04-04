@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("color").style.top = "5%";
     }
 
-
     // starting values
     let bounds = {
         lowerX: -2.4,
@@ -88,6 +87,78 @@ document.addEventListener("DOMContentLoaded", () => {
         // plots with updated settings
         plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
     });
+
+    // detects use new bounds setting
+    document.getElementById("custom").addEventListener("click", () => {
+        
+        // div for error message
+        let err = document.getElementById("error-message");
+
+        // checks if there is an undeinfed value
+        let undefined = false;
+
+        // gets bound values
+        let vals = ["x-lower", "x-upper", "y-lower", "y-upper"].map((element) => {
+
+            // gets value
+            let val = document.getElementById(element).value;
+            if (val.length === 0) {     // check if empty
+                undefined = true;
+            }
+
+            return val;
+        });
+
+        // error for undefined value
+        if (undefined) {
+            err.innerHTML = "Please do not enter empty bounds!";
+            return;
+        }
+
+        // checks for non-numerical
+        let nonNum = false;
+
+        // checks if there are non-numerical things
+        vals = vals.map((val) => {
+            // gets number and checks if its not a number
+            let num = parseFloat(val);
+            if (isNaN(num)) {
+                nonNum = true;
+            }
+            return num;
+        });
+
+        // exits
+        if (nonNum) {
+            err.innerHTML = "You cannot have non-numerical bounds!";
+            return;
+        }
+
+        // maps to bound numbers
+        let [lowerX, upperX, lowerY, upperY] = vals;
+
+        // determines validity
+        if (upperX < lowerX || upperY < lowerY) {
+            err.innerHTML = "Your upper bounds can't be smaller than your lower bounds!";
+            return;
+        }
+
+        // sets bounds
+        bounds.lowerX = lowerX;
+        bounds.upperX = upperX;
+        bounds.lowerY = lowerY;
+        bounds.upperY = upperY;
+
+        // increases depth - https://math.stackexchange.com/a/2589243
+        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
+
+        // resizes width and height
+        resizeCanvas(canvas);
+
+        // plots
+        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+
+    })
 });
 
 function plot(resolution, depth, bounds, workers, ctx, color) {
