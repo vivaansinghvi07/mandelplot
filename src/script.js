@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 resolve();
             }, Math.max(0, animated() ? 1500 - getResolution() : 0));
-        })
+        });
 
         // determines what fraction of the width/height was clicked and resizes according to bounds
         let centerX = bounds.lowerX + (bounds.upperX - bounds.lowerX) * (event.x / width());   
