@@ -26,6 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // listens for page resize
     window.addEventListener('resize', () => {
+
+        // checks if there is another graph in queue
+        if (document.getElementById("queue-manager").innerHTML === "stop") {
+            return;
+        }
+        
+        // pauses making of other graphs
+        document.getElementById("queue-manager").innerHTML = "stop";
+        
         // resizes the canvas and plots a new one
         resizeCanvas(canvas);
         plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
