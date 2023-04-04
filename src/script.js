@@ -170,8 +170,8 @@ function plot(resolution, depth, bounds, workers, ctx, color) {
     }, resolution, depth, {
         lowerX: bounds.lowerX,
         upperX: bounds.upperX,
-        lowerY: bounds.lowerY,
-        upperY: bounds.upperY
+        lowerY: bounds.upperY,  // these are swapped to avoid reversing
+        upperY: bounds.lowerY   // ^^
     }, workers, color);
 
     // displays plot
