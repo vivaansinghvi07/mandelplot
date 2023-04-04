@@ -56,6 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
         bounds.lowerY = bounds.lowerY - (bounds.lowerY - centerY) * zoom;
         bounds.upperY = bounds.upperY - (bounds.upperY - centerY) * zoom;
 
+        // displays bounds
+        document.getElementById("x-lower").value = bounds.lowerX;
+        document.getElementById("x-upper").value = bounds.upperX;
+        document.getElementById("y-upper").value = bounds.lowerY * -1;  // idk why this works but if it works dont fix it
+        document.getElementById("y-lower").value = bounds.upperY * -1;
+
         // increases depth - https://math.stackexchange.com/a/2589243
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
 
@@ -146,8 +152,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // sets bounds
         bounds.lowerX = lowerX;
         bounds.upperX = upperX;
-        bounds.lowerY = lowerY;
-        bounds.upperY = upperY;
+        bounds.lowerY = upperY * -1;
+        bounds.upperY = lowerY * -1;
 
         // increases depth - https://math.stackexchange.com/a/2589243
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
@@ -170,8 +176,8 @@ function plot(resolution, depth, bounds, workers, ctx, color) {
     }, resolution, depth, {
         lowerX: bounds.lowerX,
         upperX: bounds.upperX,
-        lowerY: bounds.upperY,  // these are swapped to avoid reversing
-        upperY: bounds.lowerY   // ^^
+        lowerY: bounds.lowerY,  // these are swapped to avoid reversing
+        upperY: bounds.upperY   // ^^
     }, workers, color);
 
     // displays plot
