@@ -24,6 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // display the plot
     plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
 
+    // listens for page resize
+    window.addEventListener('resize', () => {
+        // resizes the canvas and plots a new one
+        resizeCanvas(canvas);
+        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+    });
+
     // listens for click
     document.getElementById("container").addEventListener("click", async function(event) {
 
@@ -50,6 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let centerX = bounds.lowerX + (bounds.upperX - bounds.lowerX) * (event.x / width());   
         let centerY = bounds.lowerY + (bounds.upperY - bounds.lowerY) * (event.y / height());   
 
+        // displays where it was clicked
+        document.getElementById("center-x").innerHTML = centerX;
+        document.getElementById("center-y").innerHTML = -1 * centerY;
+
         // resizes bounds
         bounds.lowerX = bounds.lowerX - (bounds.lowerX - centerX) * zoom;
         bounds.upperX = bounds.upperX - (bounds.upperX - centerX) * zoom;
@@ -64,9 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // increases depth - https://math.stackexchange.com/a/2589243
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
-
-        // resizes width and height
-        resizeCanvas(canvas);
 
         // plots
         plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
@@ -157,9 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // increases depth - https://math.stackexchange.com/a/2589243
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
-
-        // resizes width and height
-        resizeCanvas(canvas);
 
         // plots
         plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
