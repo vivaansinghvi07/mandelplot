@@ -8,12 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // starting values
-    let bounds = {
-        lowerX: -2.4,
-        upperX: 0.9,
-        lowerY: -1.1,
-        upperY: 1.1
-    }
+    let bounds = {};
+    resetBounds(bounds); 
+
     let depth = 30;     // arbitrary inital depth
 
     // gets canvas
@@ -92,8 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        console.log("a");
-
         // pauses making of other graphs
         document.getElementById("queue-manager").innerHTML = "stop";
 
@@ -114,6 +109,23 @@ document.addEventListener("DOMContentLoaded", () => {
         plot(depth, bounds, ctx);
 
     });
+
+    document.getElementById("reset").addEventListener("click", () => {
+
+        // checks if there is another graph in the queue
+        if (document.getElementById("queue-manager").innerHTML === "stop") {
+            return;
+        }
+
+        // pauses making of other graphs
+        document.getElementById("queue-manager").innerHTML = "stop";
+
+        // resets bounds
+        resetBounds(bounds);
+
+        // plots bnew graph
+        plot(depth, bounds, ctx);
+    })
 
     // allows for setting dragging
     dragSettings(document.getElementById("drag-image-settings"), document.getElementById("settings"));
@@ -308,6 +320,21 @@ function changeBounds(bounds, centerX, centerY, zoom) {
     document.getElementById("x-upper").value = bounds.upperX;
     document.getElementById("y-upper").value = bounds.lowerY * -1;  // idk why this works but if it works dont fix it
     document.getElementById("y-lower").value = bounds.upperY * -1;
+}
+
+function resetBounds(bounds) {
+
+    // sets x-coords
+    bounds.lowerX = -2.4;   // THESE ARE SUBJECT TO CHANGE
+    bounds.upperX = 0.9;
+
+    // determines the magnitude of the y-coords
+    let yMag = (bounds.upperX - bounds.lowerX) / width() * height(); 
+    
+    // assigns bound values centered around 0
+    bounds.lowerY = - yMag / 2;
+    bounds.upperY = yMag / 2;
+    
 }
 
 // zooms the canvas by the zoom factor into the values given
