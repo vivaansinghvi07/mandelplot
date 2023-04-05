@@ -64,6 +64,14 @@ canvas {
     left: 7%;
 }
 
+#x-button {
+    position: absolute;
+    width: 12%;
+    height: auto;
+    top: 2.5%;
+    left: 5%;
+}
+
 header {
     position: absolute;
     text-align: center;
