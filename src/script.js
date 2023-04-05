@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // starting values
     let bounds = {};
     resetBounds(bounds); 
+    displayBounds(bounds);
 
     let depth = 30;     // arbitrary inital depth
 
@@ -37,6 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // resizes the canvas and plots a new one
         resizeCanvas(canvas);
+
+        // changes bounds to be more accurate
+        let yMag = (bounds.upperX - bounds.lowerX) / width() * height();
+        let centerY = (bounds.upperY + bounds.lowerY) / 2;
+        bounds.lowerY = centerY - yMag / 2;
+        bounds.upperY = centerY + yMag / 2;
+
+        // displays new bounds
+        displayBounds(bounds);
+
         plot(depth, bounds, ctx);
     });
 
@@ -122,6 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // resets bounds
         resetBounds(bounds);
+        displayBounds(bounds);
 
         // plots bnew graph
         plot(depth, bounds, ctx);
@@ -221,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // sets bounds
         bounds.lowerX = lowerX;
         bounds.upperX = upperX;
-        bounds.lowerY = upperY * -1;
+        bounds.lowerY = upperY * -1;    // idk why this works but i guess it does
         bounds.upperY = lowerY * -1;
 
         // increases depth - https://math.stackexchange.com/a/2589243
@@ -242,8 +254,8 @@ function plot(depth, bounds, ctx) {
     }, getResolution(), depth, {
         lowerX: bounds.lowerX,
         upperX: bounds.upperX,
-        lowerY: bounds.lowerY,  // these are swapped to avoid reversing
-        upperY: bounds.upperY   // ^^
+        lowerY: bounds.lowerY,  
+        upperY: bounds.upperY   
     }, getWorkers(), getColor());
 
     // displays plot
@@ -307,6 +319,15 @@ function toggleInfo(show) {
     }
 }
 
+
+// displays bounds
+function displayBounds(bounds) {
+    document.getElementById("x-lower").value = bounds.lowerX;
+    document.getElementById("x-upper").value = bounds.upperX;
+    document.getElementById("y-upper").value = bounds.lowerY * -1;  // idk why this works but if it works dont fix it
+    document.getElementById("y-lower").value = bounds.upperY * -1;
+}
+
 // changes and displays bounds
 function changeBounds(bounds, centerX, centerY, zoom) {
     // resizes bounds
@@ -315,11 +336,7 @@ function changeBounds(bounds, centerX, centerY, zoom) {
     bounds.lowerY = bounds.lowerY - (bounds.lowerY - centerY) * zoom;
     bounds.upperY = bounds.upperY - (bounds.upperY - centerY) * zoom;
 
-    // displays bounds
-    document.getElementById("x-lower").value = bounds.lowerX;
-    document.getElementById("x-upper").value = bounds.upperX;
-    document.getElementById("y-upper").value = bounds.lowerY * -1;  // idk why this works but if it works dont fix it
-    document.getElementById("y-lower").value = bounds.upperY * -1;
+    displayBounds(bounds);
 }
 
 function resetBounds(bounds) {
@@ -334,7 +351,7 @@ function resetBounds(bounds) {
     // assigns bound values centered around 0
     bounds.lowerY = - yMag / 2;
     bounds.upperY = yMag / 2;
-    
+
 }
 
 // zooms the canvas by the zoom factor into the values given
