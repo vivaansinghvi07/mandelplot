@@ -27,18 +27,28 @@ canvas {
     height: 100%;
 }
 
-#settings {
+.tab {
     position: absolute;
-    top: calc(var(--SETTINGSWIDTH) / 2);
-    left: calc(var(--SETTINGSWIDTH) / 2);
-    width: var(--SETTINGSWIDTH); 
-    height: var(--SETTINGSHEIGHT);
     background-color: white;
     border-radius: 10% / 5%;
     filter: opacity(75%);
 }
 
-#drag-image {
+#settings {
+    top: calc(var(--SETTINGSHEIGHT) / 4);
+    left: calc(var(--SETTINGSWIDTH) / 2);
+    width: var(--SETTINGSWIDTH); 
+    height: var(--SETTINGSHEIGHT);
+}
+
+#information {
+    left: calc(100% - var(--SETTINGSWIDTH));
+    top: calc(var(--SETTINGSWIDTH) / 2);
+    width: var(--SETTINGSWIDTH);
+    height: calc(var(--SETTINGSHEIGHT) * 0.8);
+}
+
+.drag-image {
     position: absolute;
     width: 10%;
     height: auto;
@@ -208,3 +218,19 @@ hr {
 #center-y {
     color: blue;
 }
+
+.info-text {
+    position: absolute;
+    left: 10%;
+    width: 80%;
+    top: 20%;
+    font-size: calc(var(--HEADERFONT) * 0.6);
+}
+
+a {
+    color: black;
+}
+
+a:hover {
+    color: blue;
+}   

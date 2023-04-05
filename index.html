@@ -18,9 +18,10 @@
         <canvas id = "zoomed-canvas"> </canvas>
         <canvas id = "canvas"> </canvas>
     </div>
-    <div id = "settings">
 
-        <img src = "assets/drag.png" id = "drag-image">
+    <div class = "tab" id = "settings">
+
+        <img src = "assets/drag.png" id = "drag-image-settings" class = "drag-image">
         <img src = "assets/question.svg" id = "help-image">
         
         <header>Mandel-Plot</header>
@@ -97,5 +98,21 @@
         <div id = "error-message"> </div>
 
     </div>
+
+    <div class = "tab" id = "information">
+        <header> Information </header>
+
+        <hr class = "title-split">
+
+        <img src = "assets/drag.png" id = "drag-image-info" class = "drag-image">
+
+        <div class = "info-text">
+            To use this, click anywhere on the screen to zoom into the graph at that point.  <br> <br>
+            You can also set custom bounds, and the "Click Location" shows the coordinates of your click. <br> <br>
+            By using the "Apply Settings" button, you can reset the number of workers, resolution, and color scheme without affecting the graph's zoom. <br> <br>
+            The source code for this project can be found <a target = "_blank" href = "https://github.com/vivaansinghvi07/mandelplot">here</a>, <br> <br>
+        </div>
+    </div>
+
 </body>
 
