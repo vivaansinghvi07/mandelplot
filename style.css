@@ -118,8 +118,18 @@ header {
 }
 
 #reload { 
-    left: 30%;
+    left: 25%;
     width: 40%;
+}
+
+#reset {
+    left: 0%;
+    width: 20%;
+}
+
+#zoom-out {
+    left: 70%;
+    width: 30%;
 }
 
 #custom {
