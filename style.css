@@ -42,8 +42,8 @@ canvas {
 }
 
 #information {
-    left: calc(100% - var(--SETTINGSWIDTH));
-    top: calc(var(--SETTINGSWIDTH) / 2);
+    right: calc(var(--SETTINGSWIDTH) / 2);
+    top: calc(var(--SETTINGSWIDTH) / 1.7);
     width: var(--SETTINGSWIDTH);
     height: calc(var(--SETTINGSHEIGHT) * 0.8);
 }
