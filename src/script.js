@@ -51,6 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        clearError();
+
         // pauses making of other graphs
         document.getElementById("queue-manager").innerHTML = "stop";
 
@@ -100,18 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // function for clicking on help
     let onHelp = false;
     document.getElementById("help-image").addEventListener("click", () => {
-        // pauses graph making
         onHelp = !onHelp;
-
-        // toggles showing
-        let info = document.getElementById("information");
-        if (onHelp) {
-            info.removeAttribute("hidden");
-        } else {
-            info.setAttribute("hidden", "hidden");
-        }
-
-    })
+        toggleInfo(onHelp);
+    });
+    document.getElementById("x-button").addEventListener("click", () => {
+        onHelp = false;
+        toggleInfo(false);  // false because it is not on the page
+    });
 
     // updates all sliders
     Array.from(document.getElementsByClassName("slider")).forEach((slider) => {
@@ -127,6 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // detects apply new settings button click
     document.getElementById("reload").addEventListener("click", () => {
+
+        clearError();
+
         // plots with updated settings
         plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
     });
@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // div for error message
         let err = document.getElementById("error-message");
+        err.innerHTML = null;
 
         // checks if there is an undeinfed value
         let undefined = false;
@@ -257,6 +258,22 @@ function getColor() {
 function resizeCanvas(canvas) {
     canvas.width = width();
     canvas.height = height();
+}
+
+// clears the error message
+function clearError() {
+    document.getElementById("error-message").innerHTML = null;
+}
+
+// toggles showing of information page
+function toggleInfo(show) {
+    // toggles showing
+    let info = document.getElementById("information");
+    if (show) {
+        info.removeAttribute("hidden");
+    } else {
+        info.setAttribute("hidden", "hidden");
+    }
 }
 
 // zooms the canvas by the zoom factor into the values given
