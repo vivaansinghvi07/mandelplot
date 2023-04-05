@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // display the plot
     plot(depth, bounds, ctx);
 
+    // stores old zoom value
+    let oldSettings = {};
+
     // listens for page resize
     window.addEventListener('resize', () => {
 
@@ -79,6 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let centerX = bounds.lowerX + (bounds.upperX - bounds.lowerX) * (event.x / width());   
         let centerY = bounds.lowerY + (bounds.upperY - bounds.lowerY) * (event.y / height());   
 
+        // stores old settings
+        oldSettings.centerX = centerX;
+        oldSettings.centerY = centerY;
+        oldSettings.zoom = zoom;
+
         // displays where it was clicked
         document.getElementById("center-x").innerHTML = centerX;
         document.getElementById("center-y").innerHTML = -1 * centerY;
@@ -105,19 +113,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         clearError();
         
-        let zoom = - 1 / (1 - getZoom());
+        // resets bounds to what they previously were
+        let zoom = - 1 / (1 - oldSettings.zoom) + 1;
+        changeBounds(bounds, oldSettings.centerX, oldSettings.centerY, zoom);
 
-        // sets center to be the middle of the screen
-        let centerX = bounds.lowerX + (bounds.upperX - bounds.lowerX) * (0.5);   
-        let centerY = bounds.lowerY + (bounds.upperY - bounds.lowerY) * (0.5);
+        zoomOutCanvas();
 
-        changeBounds(bounds, centerX, centerY, zoom);
-
-        // decreases depth
-        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
-
-        // plots
-        plot(depth, bounds, ctx);
+        // resumes other graphs
+        document.getElementById("queue-manager").innerHTML = "continue";
 
     });
 
@@ -161,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(slider.id + "-value").innerHTML = slider.value;
 
         // future updatess
-        slider.oninput = function() {
+        slider.oninput = () => {
             document.getElementById(slider.id + "-value").innerHTML = slider.value;
         }
     });
@@ -401,4 +404,29 @@ async function zoomCanvas(x, y, zoom) {
             duration: animated() ? 1000 : 0     // sets animation if necessary
         });
     }, Math.max(0, getResolution() - 2000));
+}
+
+async function zoomOutCanvas() {
+    // gets the zoomed canvas
+    let zoomedCanvas = document.getElementById("zoomed-canvas");
+
+    // clears old canvas
+    let oldCtx = document.getElementById("canvas").getContext('2d');
+    oldCtx.clearRect(0, 0, width(), height());
+
+    // animates undoing the zooming
+    await new Promise((resolve, reject) => {
+        anime({
+            targets: zoomedCanvas,
+            scale: 1,
+            top: 0,
+            left: 0,
+            easing: 'linear',
+            duration: 1000
+        });
+        setTimeout(() => {
+            oldCtx.drawImage(zoomedCanvas, 0, 0);
+            resolve();
+        }, 1000);
+    });
 }
