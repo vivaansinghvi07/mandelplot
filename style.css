@@ -111,9 +111,9 @@ header {
     left: 23%;
 }
 
-.button {
+button {
     position: absolute;
-    font-size: calc(var(--HEADERFONT) * 0.50);
+    font-size: calc(var(--HEADERFONT) * 0.45);
     height: 30%;
 }
 
