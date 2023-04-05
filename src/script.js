@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resizeCanvas(canvas);
 
     // display the plot
-    plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+    plot(depth, bounds, ctx);
 
     // listens for page resize
     window.addEventListener('resize', () => {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // resizes the canvas and plots a new one
         resizeCanvas(canvas);
-        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+        plot(depth, bounds, ctx);
     });
 
     // listens for click
@@ -75,23 +75,43 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("center-x").innerHTML = centerX;
         document.getElementById("center-y").innerHTML = -1 * centerY;
 
-        // resizes bounds
-        bounds.lowerX = bounds.lowerX - (bounds.lowerX - centerX) * zoom;
-        bounds.upperX = bounds.upperX - (bounds.upperX - centerX) * zoom;
-        bounds.lowerY = bounds.lowerY - (bounds.lowerY - centerY) * zoom;
-        bounds.upperY = bounds.upperY - (bounds.upperY - centerY) * zoom;
-
-        // displays bounds
-        document.getElementById("x-lower").value = bounds.lowerX;
-        document.getElementById("x-upper").value = bounds.upperX;
-        document.getElementById("y-upper").value = bounds.lowerY * -1;  // idk why this works but if it works dont fix it
-        document.getElementById("y-lower").value = bounds.upperY * -1;
+        changeBounds(bounds, centerX, centerY, zoom);
 
         // increases depth - https://math.stackexchange.com/a/2589243
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
 
         // plots
-        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+        plot(depth, bounds, ctx);
+
+    });
+
+    document.getElementById("zoom-out").addEventListener("click", () => {
+
+        // checks if there is another graph in queue
+        if (document.getElementById("queue-manager").innerHTML === "stop") {
+            return;
+        }
+
+        console.log("a");
+
+        // pauses making of other graphs
+        document.getElementById("queue-manager").innerHTML = "stop";
+
+        clearError();
+        
+        let zoom = - 1 / (1 - getZoom());
+
+        // sets center to be the middle of the screen
+        let centerX = bounds.lowerX + (bounds.upperX - bounds.lowerX) * (0.5);   
+        let centerY = bounds.lowerY + (bounds.upperY - bounds.lowerY) * (0.5);
+
+        changeBounds(bounds, centerX, centerY, zoom);
+
+        // decreases depth
+        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
+
+        // plots
+        plot(depth, bounds, ctx);
 
     });
 
@@ -124,11 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // detects apply new settings button click
     document.getElementById("reload").addEventListener("click", () => {
-
         clearError();
 
         // plots with updated settings
-        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+        plot(depth, bounds, ctx);
     });
 
     // detects use new bounds setting
@@ -197,23 +216,23 @@ document.addEventListener("DOMContentLoaded", () => {
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
 
         // plots
-        plot(getResolution(), depth, bounds, getWorkers(), ctx, getColor());
+        plot(depth, bounds, ctx);
 
     })
 });
 
-function plot(resolution, depth, bounds, workers, ctx, color) {
+function plot(depth, bounds, ctx) {
 
     // creates new plot with defined settings
     let plt = new MandelPlot({
         width: width(),
         height: height()
-    }, resolution, depth, {
+    }, getResolution(), depth, {
         lowerX: bounds.lowerX,
         upperX: bounds.upperX,
         lowerY: bounds.lowerY,  // these are swapped to avoid reversing
         upperY: bounds.upperY   // ^^
-    }, workers, color);
+    }, getWorkers(), getColor());
 
     // displays plot
     plt.display(ctx);
@@ -274,6 +293,21 @@ function toggleInfo(show) {
     } else {
         info.setAttribute("hidden", "hidden");
     }
+}
+
+// changes and displays bounds
+function changeBounds(bounds, centerX, centerY, zoom) {
+    // resizes bounds
+    bounds.lowerX = bounds.lowerX - (bounds.lowerX - centerX) * zoom;
+    bounds.upperX = bounds.upperX - (bounds.upperX - centerX) * zoom;
+    bounds.lowerY = bounds.lowerY - (bounds.lowerY - centerY) * zoom;
+    bounds.upperY = bounds.upperY - (bounds.upperY - centerY) * zoom;
+
+    // displays bounds
+    document.getElementById("x-lower").value = bounds.lowerX;
+    document.getElementById("x-upper").value = bounds.upperX;
+    document.getElementById("y-upper").value = bounds.lowerY * -1;  // idk why this works but if it works dont fix it
+    document.getElementById("y-lower").value = bounds.upperY * -1;
 }
 
 // zooms the canvas by the zoom factor into the values given
