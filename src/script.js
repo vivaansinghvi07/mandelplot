@@ -31,9 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (document.getElementById("queue-manager").innerHTML === "stop") {
             return;
         }
-        
+
         // pauses making of other graphs
         document.getElementById("queue-manager").innerHTML = "stop";
+
+        // clears the zoomed background canvas
+        document.getElementById('zoomed-canvas').getContext('2d').clearRect(0, 0, width(), height());
         
         // resizes the canvas and plots a new one
         resizeCanvas(canvas);
@@ -91,7 +94,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // allows for setting dragging
-    dragSettings(document.getElementById("settings"));
+    dragSettings(document.getElementById("drag-image-settings"), document.getElementById("settings"));
+    dragSettings(document.getElementById("drag-image-info"), document.getElementById("information"));
+
+    // function for clicking on help
+    let onHelp = false;
+    document.getElementById("help-image").addEventListener("click", () => {
+        // pauses graph making
+        onHelp = !onHelp;
+
+        // toggles showing
+        let info = document.getElementById("information");
+        if (onHelp) {
+            info.removeAttribute("hidden");
+        } else {
+            info.setAttribute("hidden", "hidden");
+        }
+
+    })
 
     // updates all sliders
     Array.from(document.getElementsByClassName("slider")).forEach((slider) => {
