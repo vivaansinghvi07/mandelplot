@@ -1,6 +1,11 @@
 const ANIMATIONTIME = 1000;
 const BUFFERTIME = 100;
 
+// returns depth based on difference between bounds
+function getDepth(bounds) {    // https://math.stackexchange.com/a/2589243
+    return 50 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 5);
+}
+
 // waits for content being loaded
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -41,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resetBounds(bounds); 
     displayBounds(bounds);
 
-    let depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);     // inital depth
+    let depth = getDepth(bounds);    // inital depth
 
     // gets canvas
     let canvas = document.getElementById("canvas");
@@ -124,8 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         changeBounds(bounds, centerX, centerY, zoom);
 
-        // increases depth - https://math.stackexchange.com/a/2589243
-        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
+        // increases depth
+        depth = getDepth(bounds);
 
         // plots
         plot(depth, bounds, ctx);
@@ -159,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         displayBounds(bounds);
 
         // calc new depth
-        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
+        depth = getDepth(bounds);
 
         // plots bnew graph
         plot(depth, bounds, ctx);
@@ -263,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bounds.upperY = lowerY * -1;
 
         // increases depth - https://math.stackexchange.com/a/2589243
-        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
+        depth = getDepth(bounds);
 
         // clears old settings and zooms
         clearZoomeds(oldSettings);
