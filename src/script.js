@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     plot(depth, bounds, ctx);
 
     // stores old zoom value
-    let oldSettings = {};
+    let oldSettings = new Array();
 
     // listens for page resize
     window.addEventListener('resize', () => {
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("queue-manager").innerHTML = "stop";
 
         // clears the zoomed background canvas
-        document.getElementById('zoomed-canvas').getContext('2d').clearRect(0, 0, width(), height());
+        clearZoomeds(oldSettings);
         
         // resizes the canvas and plots a new one
         resizeCanvas(canvas);
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // performs visual zoom
         await new Promise((resolve, reject) => {
-            zoomCanvas(event.x, event.y, zoom);
+            zoomCanvas(event.x, event.y, zoom, oldSettings.length + 1);
             setTimeout(() => {
                 resolve();
             }, Math.max(0, animated() ? 1500 - getResolution() : 0));
@@ -83,9 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let centerY = bounds.lowerY + (bounds.upperY - bounds.lowerY) * (event.y / height());   
 
         // stores old settings
-        oldSettings.centerX = centerX;
-        oldSettings.centerY = centerY;
-        oldSettings.zoom = zoom;
+        oldSettings.push({
+            centerX: centerX,
+            centerY: centerY,
+            zoom: zoom
+        });
 
         // displays where it was clicked
         document.getElementById("center-x").innerHTML = centerX;
@@ -103,8 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("zoom-out").addEventListener("click", () => {
 
-        // checks if there is another graph in queue
-        if (document.getElementById("queue-manager").innerHTML === "stop") {
+        // checks if there is another graph in queue or if there is nothing to zoom out
+        if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || document.getElementById("zoomeds").innerHTML === null) {
             return;
         }
 
@@ -113,13 +115,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         clearError();
         
+        let settings = oldSettings.pop();
+        
         // resets bounds to what they previously were
-        let zoom = - 1 / (1 - oldSettings.zoom) + 1;
-        changeBounds(bounds, oldSettings.centerX, oldSettings.centerY, zoom);
+        let zoom = - 1 / (1 - settings.zoom) + 1;
+        changeBounds(bounds, settings.centerX, settings.centerY, zoom);
 
-        zoomOutCanvas();
+        zoomOutCanvas(oldSettings.length + 1);
 
-        // resumes other graphs
+        // pauses making of other graphs
         document.getElementById("queue-manager").innerHTML = "continue";
 
     });
@@ -134,9 +138,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // pauses making of other graphs
         document.getElementById("queue-manager").innerHTML = "stop";
 
+        // clears everything under
+        clearZoomeds(oldSettings);
+
         // resets bounds
         resetBounds(bounds);
         displayBounds(bounds);
+
+        // calc new depth
+        depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
 
         // plots bnew graph
         plot(depth, bounds, ctx);
@@ -358,10 +368,12 @@ function resetBounds(bounds) {
 }
 
 // zooms the canvas by the zoom factor into the values given
-async function zoomCanvas(x, y, zoom) {
+async function zoomCanvas(x, y, zoom, idNumber) {
 
     // gets new canvas
-    let newCanvas = document.getElementById("zoomed-canvas");
+    let newCanvas = document.createElement("canvas");
+    newCanvas.setAttribute("id", `zoomed-canvas${idNumber}`);
+    document.getElementById("zoomeds").appendChild(newCanvas);
     let newCtx = newCanvas.getContext('2d');
 
     // gets old canvas
@@ -400,15 +412,15 @@ async function zoomCanvas(x, y, zoom) {
             left: `${-dx}px`,
             top: `${-dy}px` ,
             scale: `${scale}`,
-            easing: 'linear',
+            easing: 'easeInQuad',
             duration: animated() ? 1000 : 0     // sets animation if necessary
         });
     }, Math.max(0, getResolution() - 2000));
 }
 
-async function zoomOutCanvas() {
+async function zoomOutCanvas(idNumber) {
     // gets the zoomed canvas
-    let zoomedCanvas = document.getElementById("zoomed-canvas");
+    let zoomedCanvas = document.getElementById(`zoomed-canvas${idNumber}`);
 
     // clears old canvas
     let oldCtx = document.getElementById("canvas").getContext('2d');
@@ -421,12 +433,19 @@ async function zoomOutCanvas() {
             scale: 1,
             top: 0,
             left: 0,
-            easing: 'linear',
-            duration: 1000
+            easing: 'easeOutQuad',
+            duration: animated() ? 1000 : 0
         });
         setTimeout(() => {
             oldCtx.drawImage(zoomedCanvas, 0, 0);
+            zoomedCanvas.remove();
             resolve();
-        }, 1000);
+        }, animated() ? 1000 : 0);
     });
+}
+
+// clears old settings and the zoomeds thing
+function clearZoomeds(settings) {
+    document.getElementById("zoomeds").innerHTML = null;
+    settings = new Array();
 }
