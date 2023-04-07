@@ -241,8 +241,8 @@ hr {
     position: absolute;
     left: 10%;
     width: 80%;
-    top: 15%;
-    font-size: calc(var(--HEADERFONT) * 0.6);
+    top: 16%;
+    font-size: calc(var(--HEADERFONT) * 0.58);
 }
 
 a {
