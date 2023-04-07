@@ -52,7 +52,7 @@ function getColor() {
 
 // returns depth based on difference between bounds
 function getDepth(bounds) {    // https://math.stackexchange.com/a/2589243
-    return 50 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 5);
+    return 100 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 5);
 }
 
 // resizes canvas 
