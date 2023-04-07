@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function zoomOut() {
         // checks if there is another graph in queue or if there is nothing to zoom out
-        if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || document.getElementById("zoomeds").innerHTML === null) {
+        if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || !document.getElementById("zoomeds").innerHTML) {
             return false;
         }
 
@@ -260,6 +260,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // increases depth - https://math.stackexchange.com/a/2589243
         depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);
+
+        // clears old settings and zooms
+        clearZoomeds(oldSettings);
 
         // plots
         plot(depth, bounds, ctx);
