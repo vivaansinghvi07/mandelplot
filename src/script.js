@@ -1,6 +1,31 @@
 // waits for content being loaded
 document.addEventListener("DOMContentLoaded", () => {
 
+    function zoomOut() {
+        // checks if there is another graph in queue or if there is nothing to zoom out
+        if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || document.getElementById("zoomeds").innerHTML === null) {
+            return false;
+        }
+
+        // pauses making of other graphs
+        document.getElementById("queue-manager").innerHTML = "stop";
+
+        clearError();
+        
+        let settings = oldSettings.pop();
+        
+        // resets bounds to what they previously were
+        let zoom = - 1 / (1 - settings.zoom) + 1;
+        changeBounds(bounds, settings.centerX, settings.centerY, zoom);
+
+        zoomOutCanvas(oldSettings.length + 1);
+
+        // pauses making of other graphs
+        document.getElementById("queue-manager").innerHTML = "continue";
+
+        return true;
+    }
+
     // sets settings style based on if its on safari
     if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1) {
         document.getElementById("animation").style.left = "36%";
@@ -105,38 +130,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("zoom-out").addEventListener("click", () => {
 
-        // checks if there is another graph in queue or if there is nothing to zoom out
-        if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || document.getElementById("zoomeds").innerHTML === null) {
-            return;
-        }
-
-        // pauses making of other graphs
-        document.getElementById("queue-manager").innerHTML = "stop";
-
-        clearError();
-        
-        let settings = oldSettings.pop();
-        
-        // resets bounds to what they previously were
-        let zoom = - 1 / (1 - settings.zoom) + 1;
-        changeBounds(bounds, settings.centerX, settings.centerY, zoom);
-
-        zoomOutCanvas(oldSettings.length + 1);
-
-        // pauses making of other graphs
-        document.getElementById("queue-manager").innerHTML = "continue";
+        zoomOut();
 
     });
 
-    document.getElementById("reset").addEventListener("click", () => {
+    document.getElementById("reset").addEventListener("click", async () => {
 
         // checks if there is another graph in the queue
         if (document.getElementById("queue-manager").innerHTML === "stop") {
             return;
         }
 
-        // pauses making of other graphs
-        document.getElementById("queue-manager").innerHTML = "stop";
+        while (zoomOut()) { 
+            await new Promise((resolve, reject) => {
+                setTimeout(resolve, animated() ? 1000 : 0);
+            })
+        }
 
         // clears everything under
         clearZoomeds(oldSettings);
