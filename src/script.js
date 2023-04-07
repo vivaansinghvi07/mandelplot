@@ -1,3 +1,5 @@
+const ANIMATIONTIME = 1000;
+
 // waits for content being loaded
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -38,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resetBounds(bounds); 
     displayBounds(bounds);
 
-    let depth = 30;     // arbitrary inital depth
+    let depth = 75 + Math.pow(Math.log10(4/Math.abs(bounds.upperX - bounds.lowerX)), 4);     // inital depth
 
     // gets canvas
     let canvas = document.getElementById("canvas");
@@ -144,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         while (zoomOut()) { 
             await new Promise((resolve, reject) => {
-                setTimeout(resolve, animated() ? 1000 : 0);
+                setTimeout(resolve, animated() ? ANIMATIONTIME + 100 : 0);
             })
         }
 
@@ -426,7 +428,7 @@ async function zoomCanvas(x, y, zoom, idNumber) {
             top: `${-dy}px` ,
             scale: `${scale}`,
             easing: 'easeInQuad',
-            duration: animated() ? 1000 : 0     // sets animation if necessary
+            duration: animated() ? ANIMATIONTIME : 0     // sets animation if necessary
         });
     }, Math.max(0, getResolution() - 2000));
 }
@@ -447,13 +449,13 @@ async function zoomOutCanvas(idNumber) {
             top: 0,
             left: 0,
             easing: 'easeOutQuad',
-            duration: animated() ? 1000 : 0
+            duration: animated() ? ANIMATIONTIME : 0
         });
         setTimeout(() => {
             oldCtx.drawImage(zoomedCanvas, 0, 0);
             zoomedCanvas.remove();
             resolve();
-        }, animated() ? 1000 : 0);
+        }, animated() ? ANIMATIONTIME : 0);
     });
 }
 
