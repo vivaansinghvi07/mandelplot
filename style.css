@@ -43,9 +43,9 @@ canvas {
 
 #information {
     right: calc(var(--SETTINGSWIDTH) / 2);
-    top: calc(var(--SETTINGSWIDTH) / 1.7);
+    top: calc(var(--SETTINGSHEIGHT) / 4);
     width: var(--SETTINGSWIDTH);
-    height: calc(var(--SETTINGSHEIGHT) * 0.8);
+    height: calc(var(--SETTINGSHEIGHT));
 }
 
 .drag-image {
@@ -241,7 +241,7 @@ hr {
     position: absolute;
     left: 10%;
     width: 80%;
-    top: 20%;
+    top: 15%;
     font-size: calc(var(--HEADERFONT) * 0.6);
 }
 
