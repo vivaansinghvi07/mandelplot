@@ -4,31 +4,6 @@ const BUFFERTIME = 100;
 // waits for content being loaded
 document.addEventListener("DOMContentLoaded", () => {
 
-    function zoomOut() {
-        // checks if there is another graph in queue or if there is nothing to zoom out
-        if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || !document.getElementById("zoomeds").innerHTML) {
-            return false;
-        }
-
-        // pauses making of other graphs
-        document.getElementById("queue-manager").innerHTML = "stop";
-
-        clearError();
-        
-        let settings = oldSettings.pop();
-        
-        // resets bounds to what they previously were
-        let zoom = - 1 / (1 - settings.zoom) + 1;
-        changeBounds(bounds, settings.centerX, settings.centerY, zoom);
-
-        zoomOutCanvas(oldSettings.length + 1);
-
-        // pauses making of other graphs
-        document.getElementById("queue-manager").innerHTML = "continue";
-
-        return true;
-    }
-
     // sets settings style based on if its on safari
     if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1) {
         document.getElementById("animation").style.left = "36%";
@@ -134,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("zoom-out").addEventListener("click", () => {
 
-        zoomOut();
+        zoomOut(bounds, oldSettings);
 
     });
 
@@ -145,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        while (zoomOut()) { 
+        while (zoomOut(bounds, oldSettings)) { 
             await new Promise((resolve, reject) => {
                 setTimeout(resolve, animated() ? ANIMATIONTIME + BUFFERTIME : 0);
             })
@@ -471,4 +446,29 @@ async function zoomOutCanvas(idNumber) {
 function clearZoomeds(settings) {
     document.getElementById("zoomeds").innerHTML = null;
     settings = new Array();
+}
+
+function zoomOut(bounds, oldSettings) {
+    // checks if there is another graph in queue or if there is nothing to zoom out
+    if (document.getElementById("queue-manager").innerHTML === "stop" || oldSettings.length === 0 || !document.getElementById("zoomeds").innerHTML) {
+        return false;
+    }
+
+    // pauses making of other graphs
+    document.getElementById("queue-manager").innerHTML = "stop";
+
+    clearError();
+    
+    let settings = oldSettings.pop();
+    
+    // resets bounds to what they previously were
+    let zoom = - 1 / (1 - settings.zoom) + 1;
+    changeBounds(bounds, settings.centerX, settings.centerY, zoom);
+
+    zoomOutCanvas(oldSettings.length + 1);
+
+    // pauses making of other graphs
+    document.getElementById("queue-manager").innerHTML = "continue";
+
+    return true;
 }
