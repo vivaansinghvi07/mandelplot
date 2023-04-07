@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("warning").removeAttribute("hidden"); // show warning message to switch to chrome
     }
 
+    // pauses making of other graphs
+    document.getElementById("queue-manager").innerHTML = "stop";
+
     // starting values
     let bounds = {};
     resetBounds(bounds); 
