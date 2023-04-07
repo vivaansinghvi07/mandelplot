@@ -106,7 +106,7 @@ self.addEventListener('message', (event) => {
                 "rgb(0, 0, 255)",
                 "rgb(75, 0, 130)",
                 "rgb(238, 130, 238)"
-            ][depthReached % 7];
+            ][Math.floor(depthReached/5) % 7];
 
         }
         
