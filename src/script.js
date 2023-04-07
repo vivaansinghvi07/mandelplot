@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1) {
         document.getElementById("animation").style.left = "36%";
         document.getElementById("color").style.top = "5%";
+        document.getElementById("warning").removeAttribute("hidden"); // show warning message to switch to chrome
     }
 
     // starting values
