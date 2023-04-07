@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         while (zoomOut(bounds, oldSettings)) { 
             await new Promise((resolve, reject) => {
-                setTimeout(resolve, animated() ? ANIMATIONTIME + BUFFERTIME : 0);
+                setTimeout(resolve, animated() ? ANIMATIONTIME + BUFFERTIME * 2 : 0);
             })
         }
 
