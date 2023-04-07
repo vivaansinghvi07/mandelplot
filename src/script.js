@@ -43,22 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
         // pauses making of other graphs
         document.getElementById("queue-manager").innerHTML = "stop";
 
-        // clears the zoomed background canvas
-        clearZoomeds(oldSettings);
-        
-        // resizes the canvas and plots a new one
-        resizeCanvas(canvas);
+        setTimeout(() => {
+            // clears the zoomed background canvas
+            clearZoomeds(oldSettings);
+            
+            // resizes the canvas and plots a new one
+            resizeCanvas(canvas);
 
-        // changes bounds to be more accurate
-        let yMag = (bounds.upperX - bounds.lowerX) / width() * height();
-        let centerY = (bounds.upperY + bounds.lowerY) / 2;
-        bounds.lowerY = centerY - yMag / 2;
-        bounds.upperY = centerY + yMag / 2;
+            // changes bounds to be more accurate
+            let yMag = (bounds.upperX - bounds.lowerX) / width() * height();
+            let centerY = (bounds.upperY + bounds.lowerY) / 2;
+            bounds.lowerY = centerY - yMag / 2;
+            bounds.upperY = centerY + yMag / 2;
 
-        // displays new bounds
-        displayBounds(bounds);
+            // displays new bounds
+            displayBounds(bounds);
 
-        plot(depth, bounds, ctx);
+            plot(depth, bounds, ctx);
+        }, BUFFERTIME);
     });
 
     // listens for click
