@@ -1,4 +1,5 @@
 const ANIMATIONTIME = 1000;
+const BUFFERTIME = 100;
 
 // waits for content being loaded
 document.addEventListener("DOMContentLoaded", () => {
@@ -146,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         while (zoomOut()) { 
             await new Promise((resolve, reject) => {
-                setTimeout(resolve, animated() ? ANIMATIONTIME + 100 : 0);
+                setTimeout(resolve, animated() ? ANIMATIONTIME + BUFFERTIME : 0);
             })
         }
 
@@ -443,19 +444,21 @@ async function zoomOutCanvas(idNumber) {
 
     // animates undoing the zooming
     await new Promise((resolve, reject) => {
-        anime({
-            targets: zoomedCanvas,
-            scale: 1,
-            top: 0,
-            left: 0,
-            easing: 'easeOutQuad',
-            duration: animated() ? ANIMATIONTIME : 0
-        });
+        setTimeout(() => {
+            anime({
+                targets: zoomedCanvas,
+                scale: 1,
+                top: 0,
+                left: 0,
+                easing: 'easeOutQuad',
+                duration: animated() ? ANIMATIONTIME : 0
+            });
+        }, BUFFERTIME);
         setTimeout(() => {
             oldCtx.drawImage(zoomedCanvas, 0, 0);
             zoomedCanvas.remove();
             resolve();
-        }, animated() ? ANIMATIONTIME : 0);
+        }, animated() ? ANIMATIONTIME + BUFFERTIME : 0);
     });
 }
 
