@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
         err.innerHTML = null;
 
         // checks if there is an undeinfed value
-        let undefined = false;
+        let undef = false;
 
         // gets bound values
         let vals = ["x-lower", "x-upper", "y-lower", "y-upper"].map((element) => {
@@ -196,14 +196,14 @@ document.addEventListener("DOMContentLoaded", () => {
             // gets value
             let val = document.getElementById(element).value;
             if (val.length === 0) {     // check if empty
-                undefined = true;
+                undef = true;
             }
 
             return val;
         });
 
         // error for undefined value
-        if (undefined) {
+        if (undef) {
             err.innerHTML = "Please do not enter empty bounds!";
             return;
         }
