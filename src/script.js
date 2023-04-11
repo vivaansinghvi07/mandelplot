@@ -174,6 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // detects apply new settings button click
     document.getElementById("reload").addEventListener("click", () => {
+        
+        // checks if there is another graph in the queue
+        if (document.getElementById("queue-manager").innerHTML === "stop") {
+            return;
+        }
+        
         clearError();
 
         // plots with updated settings
