@@ -31,14 +31,14 @@ Bounds: <br>
 -2.4 < x < 0.9 <br>
 -0.9290457589285714 < y < 0.9290457589285714
 
-![Full Set](imgs/full.png)
+![Full Set](../imgs/full.png)
 <hr>
 
 Bounds: <br>
 0.35405901227678593 < x < 0.36230901227678597 <br>
 0.6123875558035716 < y < 0.6170327845982145
 
-![Zoom 1](imgs/zoom-black.png)
+![Zoom 1](../imgs/zoom-black.png)
 
 <hr>
 
@@ -46,4 +46,4 @@ Bounds: <br>
 -0.7256177142857145 < x < -0.7245617142857146 <br>
 0.27432045535714294 < y < 0.2749150446428572
 
-![Zoom 2](imgs/zoom-red.png)
+![Zoom 2](../imgs/zoom-red.png)
