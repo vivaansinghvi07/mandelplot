@@ -244,8 +244,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (isNaN(lowerY)) {
                 lowerY = upperY - height()/width() * (upperX-lowerX);
+                document.getElementById("y-lower").value = lowerY;
             } else {
                 upperY = lowerY + height()/width() * (upperX-lowerX);
+                document.getElementById("y-upper").value = upperY;
             }
         } else if (isNaN(lowerX) || isNaN(upperX)) {
             if (upperY < lowerY) {
@@ -254,8 +256,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (isNaN(lowerX)) {
                 lowerX = upperX - width()/height() * (upperY-lowerY);
+                document.getElementById("x-lower").value = lowerX;
             } else if (isNaN(upperX)) {
                 upperX = lowerX + width()/height() * (upperY-lowerY);
+                document.getElementById("x-upper").value = upperX;
             }
         } else if (upperX < lowerX || upperY < lowerY) {
             err.innerHTML = "Your upper bounds can't be smaller than your lower bounds!";
