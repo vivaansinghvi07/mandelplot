@@ -194,41 +194,41 @@ document.addEventListener("DOMContentLoaded", () => {
         err.innerHTML = null;
 
         // checks if there is an undeinfed value
-        let undef = false;
+        let undefCount = 0;
 
         // gets bound values
-        let vals = ["x-lower", "x-upper", "y-lower", "y-upper"].map((element) => {
+        let vals = ["x-lower", "x-upper", "y-lower", "y-upper"].map((element, idx) => {
 
             // gets value
             let val = document.getElementById(element).value;
             if (val.length === 0) {     // check if empty
-                undef = true;
+                undefCount++;
             }
 
             return val;
         });
 
         // error for undefined value
-        if (undef) {
-            err.innerHTML = "Please do not enter empty bounds!";
+        if (undefCount > 1) {
+            err.innerHTML = "You cannot have more than one empty bound!";
             return;
         }
 
         // checks for non-numerical
-        let nonNum = false;
+        let nonNumCount = 0;
 
         // checks if there are non-numerical things
         vals = vals.map((val) => {
             // gets number and checks if its not a number
             let num = parseFloat(val);
             if (isNaN(num)) {
-                nonNum = true;
+                nonNumCount++;
             }
             return num;
         });
 
         // exits
-        if (nonNum) {
+        if (nonNumCount > undefCount) {
             err.innerHTML = "You cannot have non-numerical bounds!";
             return;
         }
@@ -237,7 +237,27 @@ document.addEventListener("DOMContentLoaded", () => {
         let [lowerX, upperX, lowerY, upperY] = vals;
 
         // determines validity
-        if (upperX < lowerX || upperY < lowerY) {
+        if (isNaN(lowerY) || isNaN(upperY)) {
+            if (upperX < lowerX) {
+                err.innerHTML = "Your x-axis has an upper bound smaller than its lower bound!"; 
+                return;
+            }
+            if (isNaN(lowerY)) {
+                lowerY = upperY - height()/width() * (upperX-lowerX);
+            } else {
+                upperY = lowerY + height()/width() * (upperX-lowerX);
+            }
+        } else if (isNaN(lowerX) || isNaN(upperX)) {
+            if (upperY < lowerY) {
+                err.innerHTML = "Your y-axis has an upper bound smaller than its lower bound!"; 
+                return;
+            }
+            if (isNaN(lowerX)) {
+                lowerX = upperX - width()/height() * (upperY-lowerY);
+            } else if (isNaN(upperX)) {
+                upperX = lowerX + width()/height() * (upperY-lowerY);
+            }
+        } else if (upperX < lowerX || upperY < lowerY) {
             err.innerHTML = "Your upper bounds can't be smaller than your lower bounds!";
             return;
         }
