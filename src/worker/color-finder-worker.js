@@ -109,6 +109,39 @@ self.addEventListener('message', (event) => {
             ][Math.floor(depthReached/5) % 7];
 
         }
+
+        function trippy(depthReached, depth) {
+            
+          // checks for max depth being reached 
+          if (depthReached === -1) {
+            return 'rgb(0, 0, 0)'
+          }
+
+          // returns the color on a green-purple gradient depending on depth reached 
+          let green = [0, 255, 0];
+          let purple = [128, 0, 228];
+          let adjustedTotal = depth / 10;
+
+          if (Math.floor(depthReached / depth * 10) % 2 == 1) {
+          return `rgb(${
+              Math.floor((green[0] - purple[0]) * (depthReached % adjustedTotal) / adjustedTotal + purple[0])
+            }, ${
+              Math.floor((green[1] - purple[1]) * (depthReached % adjustedTotal) / adjustedTotal + purple[1])
+            }, ${
+              Math.floor((green[2] - purple[2]) * (depthReached % adjustedTotal) / adjustedTotal + purple[2])
+            })`;
+
+          } else {
+            return `rgb(${
+              Math.floor((purple[0] - green[0]) * (depthReached % adjustedTotal) / adjustedTotal + green[0])
+            }, ${
+              Math.floor((purple[1] - green[1]) * (depthReached % adjustedTotal) / adjustedTotal + green[1])
+            }, ${
+              Math.floor((purple[2] - green[2]) * (depthReached % adjustedTotal) / adjustedTotal + green[2])
+            })`;
+          }
+
+        }
         
         // checks if the "rgb" color method is used
         if (scheme === "blue" || scheme === "red" || scheme === "green") {
@@ -117,6 +150,8 @@ self.addEventListener('message', (event) => {
             return blackWhite(depthReached, depth, scheme);
         } else if (scheme === "rainbow") {
             return rainbow(depthReached);
+        } else if (scheme === "trippy") {
+            return trippy(depthReached, depth);
         }
         
     }
